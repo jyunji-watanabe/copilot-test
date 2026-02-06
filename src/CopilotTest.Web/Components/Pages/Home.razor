@@ -1,0 +1,50 @@
+﻿@page "/"
+@using CopilotTest.Web.Data
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+
+<PageTitle>Home</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
+    <h1>Welcome to CopilotTest Blazor App</h1>
+    
+    <FluentCard>
+        <h2>Features</h2>
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+            <FluentLabel>✓ .NET 10 Blazor Server</FluentLabel>
+            <FluentLabel>✓ SQLite Database</FluentLabel>
+            <FluentLabel>✓ Fluent UI Blazor Components</FluentLabel>
+            <FluentLabel>✓ xUnit Testing</FluentLabel>
+            <FluentLabel>✓ Health Check Endpoint</FluentLabel>
+        </FluentStack>
+    </FluentCard>
+
+    <FluentCard>
+        <h3>Sample Data from Database</h3>
+        @if (sampleEntities != null && sampleEntities.Any())
+        {
+            <FluentDataGrid Items="@sampleEntities.AsQueryable()">
+                <PropertyColumn Property="@(e => e.Id)" />
+                <PropertyColumn Property="@(e => e.Name)" />
+                <PropertyColumn Property="@(e => e.CreatedAt)" Format="yyyy-MM-dd HH:mm:ss" />
+            </FluentDataGrid>
+        }
+        else
+        {
+            <FluentLabel>No data available</FluentLabel>
+        }
+    </FluentCard>
+</FluentStack>
+
+@code {
+    private List<SampleEntity>? sampleEntities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Ensure database is created
+        await DbContext.Database.EnsureCreatedAsync();
+        
+        // Load sample data
+        sampleEntities = await DbContext.SampleEntities.ToListAsync();
+    }
+}
