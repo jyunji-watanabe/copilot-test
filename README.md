@@ -48,7 +48,7 @@ CopilotTest/
    dotnet run --project src/CopilotTest.Web
    ```
 
-4. Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
+4. Open your browser and navigate to `https://localhost:7084` or `http://localhost:5258`
 
 ### Running Tests
 
