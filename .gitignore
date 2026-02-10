@@ -105,3 +105,8 @@ ipch/
 
 # macOS
 .DS_Store
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
