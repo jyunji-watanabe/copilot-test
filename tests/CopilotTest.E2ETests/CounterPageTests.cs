@@ -10,7 +10,7 @@ public class CounterPageTests : PageTest
     public async Task CounterPage_ShouldIncrementCount_WhenButtonClicked()
     {
         // Arrange - Navigate to the Counter page
-        await Page.GotoAsync("http://localhost:5258/counter");
+        await Page.GotoAsync($"{TestConfiguration.BaseUrl}/counter");
         
         // Wait for the page to load
         await Page.WaitForLoadStateAsync(Microsoft.Playwright.LoadState.NetworkIdle);

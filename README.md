@@ -95,7 +95,12 @@ Alternatively, run all tests including E2E tests from the root directory:
 dotnet test
 ```
 
-**Note**: The E2E tests expect the application to be running on `http://localhost:5258`. Make sure the application is started before running the tests.
+**Note**: The E2E tests expect the application to be running on `http://localhost:5258`. Make sure the application is started before running the tests. You can override the base URL by setting the `E2E_BASE_URL` environment variable:
+
+```bash
+export E2E_BASE_URL=http://localhost:5000
+dotnet test tests/CopilotTest.E2ETests
+```
 
 ## Health Check
 
