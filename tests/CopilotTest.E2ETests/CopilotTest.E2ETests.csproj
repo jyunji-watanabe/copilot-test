@@ -23,13 +23,14 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <Target Name="InstallPlaywrightBrowsers" AfterTargets="Build">
+  <Target Name="InstallPlaywrightBrowsers" AfterTargets="Build" Condition="!Exists('$(OutDir).playwright-installed')">
     <Exec Command="$(OutDir).playwright/node/linux-x64/node $(OutDir).playwright/package/cli.js install chromium" 
           Condition="'$(OS)' != 'Windows_NT'" 
           IgnoreExitCode="false" />
     <Exec Command="$(OutDir).playwright\node\win-x64\node.exe $(OutDir).playwright\package\cli.js install chromium" 
           Condition="'$(OS)' == 'Windows_NT'" 
           IgnoreExitCode="false" />
+    <Touch Files="$(OutDir).playwright-installed" AlwaysCreate="true" />
   </Target>
 
 </Project>

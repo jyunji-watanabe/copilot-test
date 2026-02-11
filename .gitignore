@@ -110,3 +110,4 @@ ipch/
 playwright-report/
 test-results/
 playwright/.cache/
+.playwright-installed
