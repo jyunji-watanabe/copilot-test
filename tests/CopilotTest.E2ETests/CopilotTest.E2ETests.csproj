@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!-- Configure Playwright to cache browsers in project directory instead of user's home directory -->
+    <PlaywrightBrowsersPath>$(MSBuildThisFileDirectory)bin/browsers</PlaywrightBrowsersPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.58.0" />
+    <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.58.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.7.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <Target Name="InstallPlaywrightBrowsers" AfterTargets="Build" Condition="!Exists('$(MSBuildThisFileDirectory).playwright-installed')">
+    <!-- Determine the correct node path based on platform and architecture -->
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <NodePath>$(MSBuildProjectDirectory)\$(OutDir).playwright\node\win-x64\node.exe</NodePath>
+      <CliPath>$(MSBuildProjectDirectory)\$(OutDir).playwright\package\cli.js</CliPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/darwin-arm64/node</NodePath>
+      <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/darwin-x64/node</NodePath>
+      <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/linux-x64/node</NodePath>
+      <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux]))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/linux-arm64/node</NodePath>
+      <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
+    </PropertyGroup>
+    
+    <!-- Validate that platform is supported -->
+    <Error Condition="'$(NodePath)' == ''" 
+           Text="Unsupported platform: OS=$(OS), Architecture=$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture). Playwright requires Windows, Linux, or macOS on x64 or ARM64 architecture." />
+    
+    <!-- Install browsers using the bundled node and playwright CLI -->
+    <Exec Command="&quot;$(NodePath)&quot; &quot;$(CliPath)&quot; install chromium" />
+    
+    <!-- Create marker file in project directory -->
+    <Touch Files="$(MSBuildThisFileDirectory).playwright-installed" AlwaysCreate="true" />
+  </Target>
+
+</Project>
