@@ -23,14 +23,28 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <Target Name="InstallPlaywrightBrowsers" AfterTargets="Build" Condition="!Exists('$(OutDir).playwright-installed')">
-    <Exec Command="$(OutDir).playwright/node/linux-x64/node $(OutDir).playwright/package/cli.js install chromium" 
+  <Target Name="InstallPlaywrightBrowsers" AfterTargets="Build" Condition="!Exists('$(MSBuildThisFileDirectory).playwright-installed')">
+    <!-- Determine the correct node path based on platform -->
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">
+      <NodePath>$(OutDir).playwright/node/osx-arm64/node</NodePath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
+      <NodePath>$(OutDir).playwright/node/linux-x64/node</NodePath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <NodePath>$(OutDir).playwright\node\win-x64\node.exe</NodePath>
+    </PropertyGroup>
+    
+    <!-- Install browsers using the bundled node and playwright CLI -->
+    <Exec Command="$(NodePath) $(OutDir).playwright/package/cli.js install chromium" 
           Condition="'$(OS)' != 'Windows_NT'" 
           IgnoreExitCode="false" />
-    <Exec Command="$(OutDir).playwright\node\win-x64\node.exe $(OutDir).playwright\package\cli.js install chromium" 
+    <Exec Command="$(NodePath) $(OutDir).playwright\package\cli.js install chromium" 
           Condition="'$(OS)' == 'Windows_NT'" 
           IgnoreExitCode="false" />
-    <Touch Files="$(OutDir).playwright-installed" AlwaysCreate="true" />
+    
+    <!-- Create marker file in project directory -->
+    <Touch Files="$(MSBuildThisFileDirectory).playwright-installed" AlwaysCreate="true" />
   </Target>
 
 </Project>
