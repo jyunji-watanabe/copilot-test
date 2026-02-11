@@ -31,11 +31,11 @@
       <CliPath>$(MSBuildProjectDirectory)\$(OutDir).playwright\package\cli.js</CliPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">
-      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/osx-arm64/node</NodePath>
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/darwin-arm64/node</NodePath>
       <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
-      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/osx-x64/node</NodePath>
+      <NodePath>$(MSBuildProjectDirectory)/$(OutDir).playwright/node/darwin-x64/node</NodePath>
       <CliPath>$(MSBuildProjectDirectory)/$(OutDir).playwright/package/cli.js</CliPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true' AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
