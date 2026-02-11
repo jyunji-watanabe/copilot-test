@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- Configure Playwright to cache browsers in project directory instead of user's home directory -->
     <PlaywrightBrowsersPath>$(MSBuildThisFileDirectory)bin/browsers</PlaywrightBrowsersPath>
   </PropertyGroup>
 
@@ -45,6 +46,10 @@
       <NodePath>$(OutDir).playwright/node/linux-arm64/node</NodePath>
       <CliPath>$(OutDir).playwright/package/cli.js</CliPath>
     </PropertyGroup>
+    
+    <!-- Validate that platform is supported -->
+    <Error Condition="'$(NodePath)' == ''" 
+           Text="Unsupported platform: OS=$(OS), Architecture=$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture). Playwright requires Windows, Linux, or macOS on x64 or ARM64 architecture." />
     
     <!-- Install browsers using the bundled node and playwright CLI -->
     <Exec Command="&quot;$(NodePath)&quot; &quot;$(CliPath)&quot; install chromium" 
