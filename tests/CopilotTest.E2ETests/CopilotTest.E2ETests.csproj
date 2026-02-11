@@ -52,8 +52,7 @@
            Text="Unsupported platform: OS=$(OS), Architecture=$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture). Playwright requires Windows, Linux, or macOS on x64 or ARM64 architecture." />
     
     <!-- Install browsers using the bundled node and playwright CLI -->
-    <Exec Command="&quot;$(NodePath)&quot; &quot;$(CliPath)&quot; install chromium" 
-          IgnoreExitCode="false" />
+    <Exec Command="&quot;$(NodePath)&quot; &quot;$(CliPath)&quot; install chromium" />
     
     <!-- Create marker file in project directory -->
     <Touch Files="$(MSBuildThisFileDirectory).playwright-installed" AlwaysCreate="true" />
