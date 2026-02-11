@@ -68,15 +68,7 @@ dotnet test --logger "console;verbosity=detailed"
 
 E2E tests use Playwright to test the application in a real browser.
 
-#### Prerequisites
-
-Before running E2E tests for the first time, you need to install Playwright browsers:
-
-```bash
-cd tests/CopilotTest.E2ETests
-dotnet build
-pwsh bin/Debug/net10.0/playwright.ps1 install chromium
-```
+**Note**: Playwright browsers are automatically installed when you build the E2E test project for the first time. No manual installation is required.
 
 #### Running the E2E Tests
 
